@@ -1,5 +1,5 @@
 
-var middleEarth=["Bilbo Baggins", "Legolas", "Boromir", "Gandalf","Thranduil","Thorin", "Dwalin"];
+var middleEarth=["Bilbo Baggins", "Legolas", "Boromir", "Gandalf","Thranduil","Thorin", "Smaug"];
 
 function getGifs(){
 
@@ -23,17 +23,54 @@ function getGifs(){
         var gifDiv=$("<div class='item'>");
         var rating=results[i].rating;
         var p=$("<p class='rated'>").text("Rated: "+rating);
+
+
         var gifImage=$("<img>");
-        gifImage.attr("src", results[i].images.fixed_height.url);
+        gifImage.attr("src", results[i].images.fixed_height_still.url);
+        gifImage.attr("data-still", results[i].images.fixed_height_still.url);
+        gifImage.attr("data-animate",results[i].images.fixed_height.url)
+        gifImage.attr("data-state", "still");
+        gifImage.attr("class", "gif");
         gifDiv.append(gifImage);
         gifDiv.append(p);
 
         $(".gif-holder").prepend(gifDiv);
+
+        // function animateGif(){
+        //   $(".gif").on('click', function(){
+        //
+        //       var state=$(this).attr("src", results[i].images.fixed_height.url);
+        //
+        //
+        //     // gifImage.attr("src", results[i].images.fixed_height.url);
+        //
+        //   })
+        // }
       }
+
+
 
    });
 
 }
+
+function animateGifs() {
+
+            var state = $(this).attr("data-state");
+            var animateImage = $(this).attr("data-animate");
+            var stillImage = $(this).attr("data-still");
+
+            if(state === "still") {
+                $(this).attr("src", animateImage);
+                $(this).attr("data-state", "animate");
+            }
+
+            else if(state === "animate") {
+                $(this).attr("src", stillImage);
+                $(this).attr("data-state", "still");
+            }
+        }
+
 
 
 function renderButtons(){
@@ -59,4 +96,5 @@ $(".addNewButton").on('click', function(event){
 });
 
  $(document).on("click", ".character", getGifs);
+ $(document).on("click", ".gif", animateGifs);
 renderButtons();
