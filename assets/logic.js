@@ -1,7 +1,7 @@
 
 var middleEarth=["Bilbo Baggins", "Legolas", "Boromir", "Gandalf","Thranduil","Thorin", "Dwalin"];
 
-$(this).on("click", function(){
+function getGifs(){
 
   var character=$(this).attr("data-search");
 
@@ -15,10 +15,25 @@ $(this).on("click", function(){
      method:"GET"
    }).then(function(response){
       console.log(response);
+      $(".gif-holder").empty();
+
+      var results=response.data;
+
+      for (var i=0; i< results.length; i++){
+        var gifDiv=$("<div class='item'>");
+        var rating=results[i].rating;
+        var p=$("<p class='rated'>").text("Rated: "+rating);
+        var gifImage=$("<img>");
+        gifImage.attr("src", results[i].images.fixed_height.url);
+        gifDiv.append(gifImage);
+        gifDiv.append(p);
+
+        $(".gif-holder").prepend(gifDiv);
+      }
 
    });
 
-})
+}
 
 
 function renderButtons(){
@@ -40,7 +55,8 @@ $(".addNewButton").on('click', function(event){
 
   middleEarth.push(newCharacter);
   renderButtons();
+  $(".form-control").val('');
 });
 
-
+ $(document).on("click", ".character", getGifs);
 renderButtons();
